@@ -10,7 +10,6 @@ func worddayIs(date time.Time) {
 }
 
 func main() {
-	t := time.Now()
 	startTime := time.Date(2016, 11, 01, 0, 0, 0, 0, time.Local)
 	currentTime := time.Date(2016, 11, 10, 0, 0, 0, 0, time.Local)
 	duration := currentTime.Sub(startTime)
@@ -19,9 +18,7 @@ func main() {
 	fmt.Printf("%T\n", currentTime)
 	fmt.Println(duration)
 	fmt.Println(duration.Hours() / 24)
-	workdayIs(currentTime)
 	output()
-
 }
 
 func output() {
