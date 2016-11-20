@@ -2,32 +2,95 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"time"
+
+	"github.com/tcnksm/go-holidayjp"
 )
 
-func worddayIs(date time.Time) {
-	fmt.Println(date)
-}
-
 func main() {
-	startTime := time.Date(2016, 11, 01, 0, 0, 0, 0, time.Local)
-	currentTime := time.Now()
-	duration := currentTime.Sub(startTime)
-	fmt.Println(startTime)
-	fmt.Println(currentTime)
-	fmt.Printf("%T\n", currentTime)
-	fmt.Println(duration)
-	fmt.Println(math.Ceil(duration.Hours() / 24))
-	output(int(math.Ceil(duration.Hours()/24)) * 8)
-	fmt.Println(startTime.Weekday().String())
-	// 0 Sun 1 Mon...6 Sat
-	if (startTime.Weekday() == 2) || (startTime.Weekday() == 7) {
-		fmt.Println("skip")
+	now := time.Now()
+	startDay := getStartDay(now)
+	endDay := getEndDay(now)
+
+	// 今月のflextime計算
+	var workdayCount int
+	var todayCount int
+	var tempDay time.Time
+
+	tempDay = startDay
+
+	for {
+		if endDay.Before(tempDay) {
+			break
+		}
+		if isWorkday(tempDay) {
+			if tempDay.Before(now) {
+				todayCount += 1
+			}
+			workdayCount += 1
+		}
+		//１日進める
+		tempDay = tempDay.Add(24 * time.Hour)
 	}
+	output(workdayCount, todayCount)
 }
 
-func output(i int) {
-	fmt.Printf("今月の規定flextimeは%d 時間です\n", 1000)
-	fmt.Printf("今日時点の規定flextimeは%d 時間です\n", i)
+// i 日数
+func output(i, j int) {
+	fmt.Printf("今月の規定出勤日数は%d 日です\n", i)
+	fmt.Printf("今月の規定flextimeは%d 時間です\n", i*8)
+	fmt.Printf("%d時点の規定flextimeは%d 時間です\n", time.Now().Day(), j*8)
+}
+
+// 21 - 20の周期
+// 11/20 -> 10/21
+// 11/21 -> 11/21
+//  1/20 -> 12/21
+func getStartDay(d time.Time) time.Time {
+	var startDay time.Time
+	switch n := d.Day(); {
+	case (n >= 21) && (n <= 31):
+		startDay := time.Date(d.Year(), d.Month(), 21, 0, 0, 0, 0, time.Local)
+		return startDay
+	case (n >= 1) && (n <= 20):
+		// 前月の情報を取りたい
+		tmp := d.AddDate(0, 0, -21)
+		startDay := time.Date(tmp.Year(), tmp.Month(), 21, 0, 0, 0, 0, time.Local)
+		return startDay
+	}
+	return startDay
+}
+
+// 11/21 -> 12/20
+// 11/1  -> 11/20
+// 12/21 ->  1/20
+func getEndDay(d time.Time) time.Time {
+	var endDay time.Time
+	switch n := d.Day(); {
+	case (n >= 21) && (n <= 31):
+		// 翌月の情報を取りたい
+		tmp := d.AddDate(0, 0, 11)
+		endDay := time.Date(tmp.Year(), tmp.Month(), 20, 0, 0, 0, 0, time.Local)
+
+		return endDay
+	case (n >= 1) && (n <= 20):
+		endDay := time.Date(d.Year(), d.Month(), 20, 0, 0, 0, 0, time.Local)
+		return endDay
+	}
+	return endDay
+}
+
+func isWorkday(d time.Time) bool {
+	workday := true
+	//土日チェック
+	// Weedkay 0 Sun 1 Mon ... 6 Sat
+	if (d.Weekday() == 0) || (d.Weekday() == 6) {
+		workday = false
+	}
+
+	//Holidayチェック
+	if holidayjp.IsHoliday(d) {
+		workday = false
+	}
+	return workday
 }
