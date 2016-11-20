@@ -20,6 +20,11 @@ func main() {
 	fmt.Println(duration)
 	fmt.Println(math.Ceil(duration.Hours() / 24))
 	output(int(math.Ceil(duration.Hours()/24)) * 8)
+	fmt.Println(startTime.Weekday().String())
+	// 0 Sun 1 Mon...6 Sat
+	if (startTime.Weekday() == 2) || (startTime.Weekday() == 7) {
+		fmt.Println("skip")
+	}
 }
 
 func output(i int) {
