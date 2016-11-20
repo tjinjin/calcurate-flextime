@@ -39,9 +39,9 @@ func main() {
 
 // i 日数
 func output(i, j int) {
-	fmt.Printf("今月の規定出勤日数は%d 日です\n", i)
-	fmt.Printf("今月の規定flextimeは%d 時間です\n", i*8)
-	fmt.Printf("%d日時点の規定flextimeは%d 時間です\n", now.Day(), j*8)
+	fmt.Printf("今月の規定出勤日数は %d 日です\n", i)
+	fmt.Printf("今月の規定労働時間は %d 時間です\n", i*8)
+	fmt.Printf("%d日時点の標準労働時間は %d 時間です\n", now.Day(), j*8)
 }
 
 // 21 - 20の周期
