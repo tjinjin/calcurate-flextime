@@ -73,7 +73,6 @@ func getEndDay(d time.Time) time.Time {
 		// 翌月の情報を取りたい
 		tmp := d.AddDate(0, 0, 11)
 		endDay := time.Date(tmp.Year(), tmp.Month(), 20, 0, 0, 0, 0, time.Local)
-
 		return endDay
 	case (n >= 1) && (n <= 20):
 		endDay := time.Date(d.Year(), d.Month(), 20, 0, 0, 0, 0, time.Local)
