@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"time"
 
@@ -10,6 +11,10 @@ import (
 var now time.Time
 
 func main() {
+
+	salaried := flag.Float64("s", 0, "an float")
+	flag.Parse()
+
 	now = time.Now()
 	startDay := getStartDay(now)
 	endDay := getEndDay(now)
@@ -34,14 +39,14 @@ func main() {
 		//１日進める
 		tempDay = tempDay.Add(24 * time.Hour)
 	}
-	output(workdayCount, todayCount)
+	output(workdayCount, todayCount, *salaried)
 }
 
 // i 日数
-func output(i, j int) {
+func output(i, j int, k float64) {
 	fmt.Printf("今月の規定出勤日数は %d 日です\n", i)
-	fmt.Printf("今月の規定労働時間は %d 時間です\n", i*8)
-	fmt.Printf("%d日時点の標準労働時間は %d 時間です\n", now.Day(), j*8)
+	fmt.Printf("今月の規定労働時間は %d 時間です\n", i*8-int(k*8))
+	fmt.Printf("%d日時点の標準労働時間は %d 時間です\n", now.Day(), j*8-int(k*8))
 }
 
 // 21 - 20の周期
