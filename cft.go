@@ -12,7 +12,7 @@ var now time.Time
 
 func main() {
 
-	salaried := flag.Float64("s", 0, "an float")
+	vacation := flag.Float64("v", 0, "Specify number of days paid vacation. [float64]")
 	flag.Parse()
 
 	now = time.Now()
@@ -39,7 +39,7 @@ func main() {
 		//１日進める
 		tempDay = tempDay.Add(24 * time.Hour)
 	}
-	output(workdayCount, todayCount, *salaried)
+	output(workdayCount, todayCount, *vacation)
 }
 
 // i 日数
