@@ -12,7 +12,7 @@ var now time.Time
 
 func main() {
 
-	salaried := flag.Float64("s", 0, "an float")
+	salaried := flag.Float64("s", 0, "Specify number of days paid vacation. [float64]")
 	flag.Parse()
 
 	now = time.Now()
