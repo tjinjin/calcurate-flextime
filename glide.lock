@@ -1,0 +1,10 @@
+hash: e7b27c5694f3361cd16230020480a7b5f5644dd6dc43b8ddc5263afbe1d82062
+updated: 2016-12-19T15:15:00.442968902+09:00
+imports:
+- name: github.com/tcnksm/go-holidayjp
+  version: 1d8715d56f21c725fa31d0fbeaef171c757c14e0
+  subpackages:
+  - asset
+- name: gopkg.in/yaml.v2
+  version: a5b47d31c556af34a302ce5d659e6fea44d90de0
+devImports: []
