@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"math"
 	"time"
 
 	"github.com/tcnksm/go-holidayjp"
@@ -25,6 +26,15 @@ func main() {
 	var tempDay time.Time
 
 	tempDay = startDay
+
+	// 何日目かを取得
+	duration := math.Ceil(now.Sub(startDay).Hours() / 24)
+	fmt.Println(duration)
+	days := make([]time.Time, int(duration))
+
+	for i, _ := range days {
+		days[i] = startDay.AddDate(0, 0, i)
+	}
 
 	for {
 		if endDay.Before(tempDay) {
