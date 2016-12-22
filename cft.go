@@ -18,38 +18,39 @@ func main() {
 
 	now = time.Now()
 	startDay := getStartDay(now)
-	endDay := getEndDay(now)
+	//	endDay := getEndDay(now)
 
 	// 今月のflextime計算
 	var workdayCount int
 	var todayCount int
-	var tempDay time.Time
-
-	tempDay = startDay
 
 	// 何日目かを取得
 	duration := math.Ceil(now.Sub(startDay).Hours() / 24)
 	fmt.Println(duration)
 	days := make([]time.Time, int(duration))
 
+	// 日付のsliceを作る
 	for i, _ := range days {
 		days[i] = startDay.AddDate(0, 0, i)
 	}
 
-	for {
-		if endDay.Before(tempDay) {
-			break
-		}
-		if isWorkday(tempDay) {
-			if tempDay.Before(now) {
-				todayCount += 1
-			}
-			workdayCount += 1
-		}
-		//１日進める
-		tempDay = tempDay.Add(24 * time.Hour)
+	var t, w int
+
+	for i, _ := range days {
+		go countWorkday(days[i], t, w)
+		todayCount += <-t
+		workdayCount += <-w
 	}
 	output(workdayCount, todayCount, *vacation)
+}
+
+func countWorkday(tempDay time.Time, todayCount chan int, workdayCount chan int) {
+	if isWorkday(tempDay) {
+		if tempDay.Before(now) {
+			todayCount <- 1
+		}
+		workdayCount <- 1
+	}
 }
 
 // i 日数
